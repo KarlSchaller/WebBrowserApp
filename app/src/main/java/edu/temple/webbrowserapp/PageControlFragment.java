@@ -7,9 +7,11 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.URLUtil;
 import android.widget.EditText;
 
 /**
@@ -60,7 +62,9 @@ public class PageControlFragment extends Fragment {
         view.findViewById(R.id.imageButtonGo).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                parentActivity.onGoClick(editText.getText().toString());
+                String url = editText.getText().toString();
+                url = URLUtil.guessUrl(url);
+                parentActivity.onGoClick(url);
             }
         });
 
