@@ -1,8 +1,11 @@
 package edu.temple.webbrowserapp;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+
+import java.io.Serializable;
 
 public class BrowserActivity extends AppCompatActivity implements PageControlFragment.ButtonClickInterface, PageViewerFragment.LinkClickInterface {
 
@@ -14,13 +17,20 @@ public class BrowserActivity extends AppCompatActivity implements PageControlFra
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        pageControlFragment = new PageControlFragment();
-        pageViewerFragment = new PageViewerFragment();
-        getSupportFragmentManager()
-                .beginTransaction()
-                .add(R.id.page_control, pageControlFragment)
-                .add(R.id.page_viewer, pageViewerFragment)
-                .commit();
+        if (savedInstanceState == null) {
+            pageControlFragment = new PageControlFragment();
+            pageViewerFragment = new PageViewerFragment();
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .add(R.id.page_control, pageControlFragment)
+                    .add(R.id.page_viewer, pageViewerFragment)
+                    .addToBackStack(null)
+                    .commit();
+        }
+        else {
+            pageControlFragment = (PageControlFragment) getSupportFragmentManager().findFragmentById(R.id.page_control);
+            pageViewerFragment = (PageViewerFragment) getSupportFragmentManager().findFragmentById(R.id.page_viewer);
+        }
     }
 
     @Override
