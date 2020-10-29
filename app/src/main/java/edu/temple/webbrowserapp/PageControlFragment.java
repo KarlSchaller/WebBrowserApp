@@ -23,7 +23,8 @@ public class PageControlFragment extends Fragment {
 //    private String mParam1;
 //    private String mParam2;
 
-    ClickInterface parentActivity;
+    ButtonClickInterface parentActivity;
+    EditText editText;
 
     public PageControlFragment() {
         // Required empty public constructor
@@ -50,10 +51,10 @@ public class PageControlFragment extends Fragment {
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
 
-        if (context instanceof ClickInterface)
-            parentActivity = (ClickInterface) context;
+        if (context instanceof ButtonClickInterface)
+            parentActivity = (ButtonClickInterface) context;
         else
-            throw new RuntimeException("You must implement the ClickInterface interface to attach this fragment");
+            throw new RuntimeException("You must implement the ButtonClickInterface interface to attach this fragment");
     }
 
     @Override
@@ -70,33 +71,37 @@ public class PageControlFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         final View view = inflater.inflate(R.layout.fragment_page_control, container, false);
+        editText = view.findViewById(R.id.editTextURL);
 
         view.findViewById(R.id.imageButtonBack).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                parentActivity.backClick();
+                parentActivity.onBackClick();
             }
         });
         view.findViewById(R.id.imageButtonNext).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                parentActivity.nextClick();
+                parentActivity.onNextClick();
             }
         });
         view.findViewById(R.id.imageButtonGo).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                EditText editText = view.findViewById(R.id.editTextURL);
-                parentActivity.goClick(editText.getText().toString());
+                parentActivity.onGoClick(editText.getText().toString());
             }
         });
 
         return view;
     }
 
-    interface ClickInterface {
-        void goClick(String url);
-        void nextClick();
-        void backClick();
+    public void setText(String url) {
+        editText.setText(url);
+    }
+
+    interface ButtonClickInterface {
+        void onGoClick(String url);
+        void onNextClick();
+        void onBackClick();
     }
 }
