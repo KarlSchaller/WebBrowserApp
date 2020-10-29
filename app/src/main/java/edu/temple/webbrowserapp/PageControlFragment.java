@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -68,7 +69,7 @@ public class PageControlFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_page_control, container, false);
+        final View view = inflater.inflate(R.layout.fragment_page_control, container, false);
 
         view.findViewById(R.id.imageButtonBack).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -85,7 +86,8 @@ public class PageControlFragment extends Fragment {
         view.findViewById(R.id.imageButtonGo).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                parentActivity.goClick();
+                EditText editText = view.findViewById(R.id.editTextURL);
+                parentActivity.goClick(editText.getText().toString());
             }
         });
 
@@ -93,7 +95,7 @@ public class PageControlFragment extends Fragment {
     }
 
     interface ClickInterface {
-        void goClick();
+        void goClick(String url);
         void nextClick();
         void backClick();
     }
