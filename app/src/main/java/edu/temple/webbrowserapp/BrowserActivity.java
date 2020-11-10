@@ -2,13 +2,16 @@ package edu.temple.webbrowserapp;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.graphics.pdf.PdfDocument;
 import android.os.Bundle;
+import android.view.View;
 
-public class BrowserActivity extends AppCompatActivity implements PageControlFragment.PageControlClickInterface, PageViewerFragment.LinkClickInterface, BrowserControlFragment.BrowserControlClickInterface {
+public class BrowserActivity extends AppCompatActivity implements PageControlFragment.PageControlClickInterface, PageViewerFragment.LinkClickInterface, BrowserControlFragment.BrowserControlClickInterface, PageListFragment.PageListClickInterface {
 
     PageControlFragment pageControlFragment;
     PageViewerFragment pageViewerFragment;
     BrowserControlFragment browserControlFragment;
+    PageListFragment pageListFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -19,11 +22,13 @@ public class BrowserActivity extends AppCompatActivity implements PageControlFra
             pageControlFragment = new PageControlFragment();
             pageViewerFragment = new PageViewerFragment();
             browserControlFragment = new BrowserControlFragment();
+            pageListFragment = PageListFragment.newInstance(new String[]{"page1", "page2", "page3"});
             getSupportFragmentManager()
                     .beginTransaction()
                     .add(R.id.page_control, pageControlFragment)
                     .add(R.id.page_viewer, pageViewerFragment)
                     .add(R.id.browser_control, browserControlFragment)
+                    .add(R.id.page_list, pageListFragment)
                     .addToBackStack(null)
                     .commit();
         }
@@ -31,6 +36,7 @@ public class BrowserActivity extends AppCompatActivity implements PageControlFra
             pageControlFragment = (PageControlFragment) getSupportFragmentManager().findFragmentById(R.id.page_control);
             pageViewerFragment = (PageViewerFragment) getSupportFragmentManager().findFragmentById(R.id.page_viewer);
             browserControlFragment = (BrowserControlFragment) getSupportFragmentManager().findFragmentById(R.id.browser_control);
+            pageListFragment = (PageListFragment) getSupportFragmentManager().findFragmentById(R.id.page_list);
         }
     }
 
@@ -56,6 +62,11 @@ public class BrowserActivity extends AppCompatActivity implements PageControlFra
 
     @Override
     public void onNewPageClick() {
+
+    }
+
+    @Override
+    public void onListClick(View view) {
 
     }
 }
