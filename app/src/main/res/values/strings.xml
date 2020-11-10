@@ -5,4 +5,5 @@
     <string name="next">next</string>
     <string name="back">back</string>
     <string name="go">go</string>
+    <string name="new_page">new page</string>
 </resources>
