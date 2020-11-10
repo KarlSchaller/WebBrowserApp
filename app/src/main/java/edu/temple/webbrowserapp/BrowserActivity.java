@@ -1,16 +1,14 @@
 package edu.temple.webbrowserapp;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 
-import java.io.Serializable;
-
-public class BrowserActivity extends AppCompatActivity implements PageControlFragment.ButtonClickInterface, PageViewerFragment.LinkClickInterface {
+public class BrowserActivity extends AppCompatActivity implements PageControlFragment.PageControlClickInterface, PageViewerFragment.LinkClickInterface, BrowserControlFragment.BrowserControlClickInterface {
 
     PageControlFragment pageControlFragment;
     PageViewerFragment pageViewerFragment;
+    BrowserControlFragment browserControlFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,16 +18,19 @@ public class BrowserActivity extends AppCompatActivity implements PageControlFra
         if (savedInstanceState == null) {
             pageControlFragment = new PageControlFragment();
             pageViewerFragment = new PageViewerFragment();
+            browserControlFragment = new BrowserControlFragment();
             getSupportFragmentManager()
                     .beginTransaction()
                     .add(R.id.page_control, pageControlFragment)
                     .add(R.id.page_viewer, pageViewerFragment)
+                    .add(R.id.browser_control, browserControlFragment)
                     .addToBackStack(null)
                     .commit();
         }
         else {
             pageControlFragment = (PageControlFragment) getSupportFragmentManager().findFragmentById(R.id.page_control);
             pageViewerFragment = (PageViewerFragment) getSupportFragmentManager().findFragmentById(R.id.page_viewer);
+            browserControlFragment = (BrowserControlFragment) getSupportFragmentManager().findFragmentById(R.id.browser_control);
         }
     }
 
@@ -51,5 +52,10 @@ public class BrowserActivity extends AppCompatActivity implements PageControlFra
     @Override
     public void onLinkClick(String url) {
         pageControlFragment.setText(url);
+    }
+
+    @Override
+    public void onNewPageClick() {
+
     }
 }

@@ -4,10 +4,8 @@ import android.content.Context;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,7 +17,7 @@ import android.widget.EditText;
  */
 public class PageControlFragment extends Fragment {
 
-    ButtonClickInterface parentActivity;
+    PageControlClickInterface parentActivity;
     EditText editText;
 
     public PageControlFragment() {
@@ -29,10 +27,10 @@ public class PageControlFragment extends Fragment {
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-        if (context instanceof ButtonClickInterface)
-            parentActivity = (ButtonClickInterface) context;
+        if (context instanceof PageControlClickInterface)
+            parentActivity = (PageControlClickInterface) context;
         else
-            throw new RuntimeException("You must implement the ButtonClickInterface interface to attach this fragment");
+            throw new RuntimeException("You must implement the PageControlClickInterface interface to attach this fragment");
     }
 
     @Override
@@ -75,7 +73,7 @@ public class PageControlFragment extends Fragment {
         editText.setText(url);
     }
 
-    interface ButtonClickInterface {
+    interface PageControlClickInterface {
         void onGoClick(String url);
         void onNextClick();
         void onBackClick();
