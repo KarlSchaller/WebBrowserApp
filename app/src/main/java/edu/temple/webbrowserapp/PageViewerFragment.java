@@ -51,8 +51,14 @@ public class PageViewerFragment extends Fragment {
         webView.setWebViewClient(new WebViewClient() {
             @Override
             public void onPageStarted(WebView view, String url, Bitmap favicon) {
-                parentActivity.onPageLoad(PageViewerFragment.this, url);
+                parentActivity.onPageLoad(PageViewerFragment.this, url, view.getTitle());
                 super.onPageStarted(view, url, favicon);
+            }
+
+            @Override
+            public void onPageFinished(WebView view, String url) {
+                parentActivity.onPageLoad(PageViewerFragment.this, url, view.getTitle());
+                super.onPageFinished(view, url);
             }
         });
 
@@ -88,7 +94,11 @@ public class PageViewerFragment extends Fragment {
         return webView.getUrl();
     }
 
+    public String getTitle() {
+        return webView.getTitle();
+    }
+
     interface PageViewerInterface {
-        void onPageLoad(PageViewerFragment pageViewerFragment, String url);
+        void onPageLoad(PageViewerFragment pageViewerFragment, String url, String title);
     }
 }

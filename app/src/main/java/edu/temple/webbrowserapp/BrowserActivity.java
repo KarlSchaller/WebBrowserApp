@@ -66,21 +66,21 @@ public class BrowserActivity extends AppCompatActivity implements PageControlFra
     }
 
     @Override
-    public void onPagerSelect(String url) {
+    public void onPagerSelect(String url, String title) {
         if (url == null)
             setTitle("New Page");
         else
-            setTitle(url);
+            setTitle(title);
         pageControlFragment.setText(url);
 
     }
 
     @Override
-    public void onPageLoad(PageViewerFragment pageViewerFragment, String url) {
+    public void onPageLoad(PageViewerFragment pageViewerFragment, String url, String title) {
         if (pageViewerFragment == pagerFragment.getPage()) {
-            setTitle(url);
+            setTitle(title);
             pageControlFragment.setText(url);
-            pageListFragment.setTitle(pagerFragment.getIndex(), url);
+            pageListFragment.setTitle(pagerFragment.getIndex(), title);
         }
     }
 }

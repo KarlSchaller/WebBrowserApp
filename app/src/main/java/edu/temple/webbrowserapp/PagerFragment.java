@@ -70,7 +70,7 @@ public class PagerFragment extends Fragment {
 
             @Override
             public void onPageSelected(int position) {
-                parentActivity.onPagerSelect(getPage().getUrl());
+                parentActivity.onPagerSelect(getPage().getUrl(), getPage().getTitle());
             }
 
             @Override
@@ -102,6 +102,6 @@ public class PagerFragment extends Fragment {
     }
 
     interface PagerInterface {
-        void onPagerSelect(String url);
+        void onPagerSelect(String url, String title);
     }
 }
