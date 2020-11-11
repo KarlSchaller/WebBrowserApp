@@ -16,9 +16,6 @@ import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-/**
- * A simple {@link Fragment} subclass.
- */
 public class PageViewerFragment extends Fragment {
 
     PageViewerInterface parentActivity;

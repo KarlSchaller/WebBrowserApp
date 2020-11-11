@@ -12,9 +12,6 @@ import android.view.ViewGroup;
 import android.webkit.URLUtil;
 import android.widget.EditText;
 
-/**
- * A simple {@link Fragment} subclass.
- */
 public class PageControlFragment extends Fragment {
 
     PageControlInterface parentActivity;

@@ -14,21 +14,7 @@ import android.view.ViewGroup;
 
 import java.util.ArrayList;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link PagerFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class PagerFragment extends Fragment {
-
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
 
     PagerInterface parentActivity;
     ArrayList<PageViewerFragment> pageViewerFragments;
@@ -38,24 +24,6 @@ public class PagerFragment extends Fragment {
 
     public PagerFragment() {
         // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment PagerFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static PagerFragment newInstance(String param1, String param2) {
-        PagerFragment fragment = new PagerFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
     }
 
     @Override
@@ -72,10 +40,6 @@ public class PagerFragment extends Fragment {
         super.onCreate(savedInstanceState);
         pageViewerFragments = new ArrayList<>();
         pageViewerFragments.add(new PageViewerFragment());
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
@@ -106,7 +70,7 @@ public class PagerFragment extends Fragment {
 
             @Override
             public void onPageSelected(int position) {
-                parentActivity.onPagerSwipe(getPage().getUrl());
+                parentActivity.onPagerSelect(getPage().getUrl());
             }
 
             @Override
@@ -133,7 +97,11 @@ public class PagerFragment extends Fragment {
         return pageViewerFragments.get(viewPager.getCurrentItem());
     }
 
+    public int getIndex() {
+        return viewPager.getCurrentItem();
+    }
+
     interface PagerInterface {
-        void onPagerSwipe(String url);
+        void onPagerSelect(String url);
     }
 }

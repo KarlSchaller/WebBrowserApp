@@ -20,7 +20,7 @@ public class BrowserActivity extends AppCompatActivity implements PageControlFra
             pageControlFragment = new PageControlFragment();
             pagerFragment = new PagerFragment();
             browserControlFragment = new BrowserControlFragment();
-            pageListFragment = PageListFragment.newInstance(new String[]{"page1", "page2", "page3"});
+            pageListFragment = new PageListFragment();
             getSupportFragmentManager()
                     .beginTransaction()
                     .add(R.id.page_control, pageControlFragment)
@@ -46,35 +46,37 @@ public class BrowserActivity extends AppCompatActivity implements PageControlFra
     @Override
     public void onNextClick() {
         pagerFragment.getPage().next();
-//        pageControlFragment.setText(pagerFragment.getUrl());
     }
 
     @Override
     public void onBackClick() {
         pagerFragment.getPage().back();
-//        pageControlFragment.setText(pagerFragment.getUrl());
     }
 
     @Override
     public void onNewPageClick() {
+        pageListFragment.addTitle("New Page");
         pagerFragment.addPage();
-        pageControlFragment.setText(null);
     }
 
     @Override
     public void onListClick(int position) {
         pagerFragment.setPage(position);
-        pageControlFragment.setText(pagerFragment.getPage().getUrl());
     }
 
     @Override
-    public void onPagerSwipe(String url) {
+    public void onPagerSelect(String url) {
+        if (url != null)
+            pageListFragment.setTitle(pagerFragment.getIndex(), url);
         pageControlFragment.setText(url);
     }
 
     @Override
     public void onPageLoad(PageViewerFragment pageViewerFragment, String url) {
-        if (pageViewerFragment == pagerFragment.getPage())
+        if (pageViewerFragment == pagerFragment.getPage()) {
             pageControlFragment.setText(url);
+            if (url != null)
+                pageListFragment.setTitle(pagerFragment.getIndex(), url);
+        }
     }
 }
