@@ -109,7 +109,7 @@ public class PageListFragment extends Fragment {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                parentActivity.onListClick(view);
+                parentActivity.onListClick(position);
             }
         });
 
@@ -117,6 +117,6 @@ public class PageListFragment extends Fragment {
     }
 
     interface PageListClickInterface {
-        void onListClick(View view);
+        void onListClick(int position);
     }
 }

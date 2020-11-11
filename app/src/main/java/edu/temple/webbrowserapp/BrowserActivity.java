@@ -3,7 +3,6 @@ package edu.temple.webbrowserapp;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
-import android.view.View;
 
 public class BrowserActivity extends AppCompatActivity implements PageControlFragment.PageControlClickInterface, PageViewerFragment.LinkClickInterface, BrowserControlFragment.BrowserControlClickInterface, PageListFragment.PageListClickInterface, PagerFragment.PagerSwipeInterface {
 
@@ -69,8 +68,8 @@ public class BrowserActivity extends AppCompatActivity implements PageControlFra
     }
 
     @Override
-    public void onListClick(View view) {
-
+    public void onListClick(int position) {
+        pagerFragment.setPage(position);
     }
 
     @Override

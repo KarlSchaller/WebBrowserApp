@@ -123,9 +123,15 @@ public class PagerFragment extends Fragment {
         return view;
     }
 
+    public void setPage(int index) {
+        if (index < pageViewerFragments.size())
+            viewPager.setCurrentItem(index);
+    }
+
     public void addPage() {
         pageViewerFragments.add(new PageViewerFragment());
         fragmentStatePagerAdapter.notifyDataSetChanged();
+        viewPager.setCurrentItem(pageViewerFragments.size()-1);
     }
 
     public void go(String url) {
