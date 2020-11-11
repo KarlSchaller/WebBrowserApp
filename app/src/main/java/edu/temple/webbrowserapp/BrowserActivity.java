@@ -29,6 +29,7 @@ public class BrowserActivity extends AppCompatActivity implements PageControlFra
                     .add(R.id.page_list, pageListFragment)
                     .addToBackStack(null)
                     .commit();
+            setTitle("New Page");
         }
         else {
             pageControlFragment = (PageControlFragment) getSupportFragmentManager().findFragmentById(R.id.page_control);
@@ -66,17 +67,20 @@ public class BrowserActivity extends AppCompatActivity implements PageControlFra
 
     @Override
     public void onPagerSelect(String url) {
-        if (url != null)
-            pageListFragment.setTitle(pagerFragment.getIndex(), url);
+        if (url == null)
+            setTitle("New Page");
+        else
+            setTitle(url);
         pageControlFragment.setText(url);
+
     }
 
     @Override
     public void onPageLoad(PageViewerFragment pageViewerFragment, String url) {
         if (pageViewerFragment == pagerFragment.getPage()) {
+            setTitle(url);
             pageControlFragment.setText(url);
-            if (url != null)
-                pageListFragment.setTitle(pagerFragment.getIndex(), url);
+            pageListFragment.setTitle(pagerFragment.getIndex(), url);
         }
     }
 }
