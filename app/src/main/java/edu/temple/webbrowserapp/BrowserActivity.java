@@ -2,14 +2,14 @@ package edu.temple.webbrowserapp;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.graphics.pdf.PdfDocument;
 import android.os.Bundle;
 import android.view.View;
 
-public class BrowserActivity extends AppCompatActivity implements PageControlFragment.PageControlClickInterface, PageViewerFragment.LinkClickInterface, BrowserControlFragment.BrowserControlClickInterface, PageListFragment.PageListClickInterface {
+public class BrowserActivity extends AppCompatActivity implements PageControlFragment.PageControlClickInterface, PageViewerFragment.LinkClickInterface, BrowserControlFragment.BrowserControlClickInterface, PageListFragment.PageListClickInterface, PagerFragment.PagerSwipeInterface {
 
     PageControlFragment pageControlFragment;
-    PageViewerFragment pageViewerFragment;
+//    PageViewerFragment pageViewerFragment;
+    PagerFragment pagerFragment;
     BrowserControlFragment browserControlFragment;
     PageListFragment pageListFragment;
 
@@ -20,13 +20,15 @@ public class BrowserActivity extends AppCompatActivity implements PageControlFra
 
         if (savedInstanceState == null) {
             pageControlFragment = new PageControlFragment();
-            pageViewerFragment = new PageViewerFragment();
+//            pageViewerFragment = new PageViewerFragment();
+            pagerFragment = new PagerFragment();
             browserControlFragment = new BrowserControlFragment();
             pageListFragment = PageListFragment.newInstance(new String[]{"page1", "page2", "page3"});
             getSupportFragmentManager()
                     .beginTransaction()
                     .add(R.id.page_control, pageControlFragment)
-                    .add(R.id.page_viewer, pageViewerFragment)
+//                    .add(R.id.page_display, pageViewerFragment)
+                    .add(R.id.page_display, pagerFragment)
                     .add(R.id.browser_control, browserControlFragment)
                     .add(R.id.page_list, pageListFragment)
                     .addToBackStack(null)
@@ -34,7 +36,8 @@ public class BrowserActivity extends AppCompatActivity implements PageControlFra
         }
         else {
             pageControlFragment = (PageControlFragment) getSupportFragmentManager().findFragmentById(R.id.page_control);
-            pageViewerFragment = (PageViewerFragment) getSupportFragmentManager().findFragmentById(R.id.page_viewer);
+//            pageViewerFragment = (PageViewerFragment) getSupportFragmentManager().findFragmentById(R.id.page_display);
+            pagerFragment = (PagerFragment) getSupportFragmentManager().findFragmentById(R.id.page_display);
             browserControlFragment = (BrowserControlFragment) getSupportFragmentManager().findFragmentById(R.id.browser_control);
             pageListFragment = (PageListFragment) getSupportFragmentManager().findFragmentById(R.id.page_list);
         }
@@ -42,17 +45,17 @@ public class BrowserActivity extends AppCompatActivity implements PageControlFra
 
     @Override
     public void onGoClick(String url) {
-        pageViewerFragment.go(url);
+        pagerFragment.go(url);
     }
 
     @Override
     public void onNextClick() {
-        pageViewerFragment.next();
+        pagerFragment.next();
     }
 
     @Override
     public void onBackClick() {
-        pageViewerFragment.back();
+        pagerFragment.back();
     }
 
     @Override
@@ -62,11 +65,16 @@ public class BrowserActivity extends AppCompatActivity implements PageControlFra
 
     @Override
     public void onNewPageClick() {
-
+        pagerFragment.addPage();
     }
 
     @Override
     public void onListClick(View view) {
+
+    }
+
+    @Override
+    public void onSwipe() {
 
     }
 }

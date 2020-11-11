@@ -5,7 +5,6 @@
     android:layout_height="match_parent"
     tools:context=".BrowserControlFragment">
 
-    <!-- TODO: Update blank fragment layout -->
     <ImageButton
         android:id="@+id/imageButton"
         android:layout_width="wrap_content"
