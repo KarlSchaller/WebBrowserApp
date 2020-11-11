@@ -9,14 +9,13 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.URLUtil;
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class BrowserControlFragment extends Fragment {
 
-    BrowserControlClickInterface parentActivity;
+    BrowserControlInterface parentActivity;
 
     public BrowserControlFragment() {
         // Required empty public constructor
@@ -25,10 +24,10 @@ public class BrowserControlFragment extends Fragment {
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-        if (context instanceof BrowserControlClickInterface)
-            parentActivity = (BrowserControlClickInterface) context;
+        if (context instanceof BrowserControlInterface)
+            parentActivity = (BrowserControlInterface) context;
         else
-            throw new RuntimeException("You must implement the BrowserControlClickInterface interface to attach this fragment");
+            throw new RuntimeException("You must implement the BrowserControlInterface interface to attach this fragment");
     }
 
     @Override
@@ -52,7 +51,7 @@ public class BrowserControlFragment extends Fragment {
         return view;
     }
 
-    interface BrowserControlClickInterface {
+    interface BrowserControlInterface {
         void onNewPageClick();
     }
 }

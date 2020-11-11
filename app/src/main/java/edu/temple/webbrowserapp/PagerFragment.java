@@ -6,16 +6,11 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentStatePagerAdapter;
-import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.BaseAdapter;
-import android.widget.ListView;
-import android.widget.TextView;
 
 import java.util.ArrayList;
 
@@ -35,7 +30,7 @@ public class PagerFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    PagerSwipeInterface parentActivity;
+    PagerInterface parentActivity;
     ArrayList<PageViewerFragment> pageViewerFragments;
     ViewPager viewPager;
     FragmentStatePagerAdapter fragmentStatePagerAdapter;
@@ -66,10 +61,10 @@ public class PagerFragment extends Fragment {
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-        if (context instanceof PagerSwipeInterface)
-            parentActivity = (PagerSwipeInterface) context;
+        if (context instanceof PagerInterface)
+            parentActivity = (PagerInterface) context;
         else
-            throw new RuntimeException("You must implement the PagerSwipeInterface interface to attach this fragment");
+            throw new RuntimeException("You must implement the PagerInterface interface to attach this fragment");
     }
 
     @Override
@@ -111,7 +106,7 @@ public class PagerFragment extends Fragment {
 
             @Override
             public void onPageSelected(int position) {
-                parentActivity.onSwipe();
+                parentActivity.onPagerSwipe(getPage().getUrl());
             }
 
             @Override
@@ -134,19 +129,11 @@ public class PagerFragment extends Fragment {
         viewPager.setCurrentItem(pageViewerFragments.size()-1);
     }
 
-    public void go(String url) {
-        pageViewerFragments.get(viewPager.getCurrentItem()).go(url);
+    public PageViewerFragment getPage() {
+        return pageViewerFragments.get(viewPager.getCurrentItem());
     }
 
-    public void back() {
-        pageViewerFragments.get(viewPager.getCurrentItem()).back();
-    }
-
-    public void next() {
-        pageViewerFragments.get(viewPager.getCurrentItem()).next();
-    }
-
-    interface PagerSwipeInterface {
-        void onSwipe();
+    interface PagerInterface {
+        void onPagerSwipe(String url);
     }
 }

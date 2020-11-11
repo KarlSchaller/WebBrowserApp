@@ -4,10 +4,9 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 
-public class BrowserActivity extends AppCompatActivity implements PageControlFragment.PageControlClickInterface, PageViewerFragment.LinkClickInterface, BrowserControlFragment.BrowserControlClickInterface, PageListFragment.PageListClickInterface, PagerFragment.PagerSwipeInterface {
+public class BrowserActivity extends AppCompatActivity implements PageControlFragment.PageControlInterface, BrowserControlFragment.BrowserControlInterface, PageListFragment.PageListInterface, PagerFragment.PagerInterface, PageViewerFragment.PageViewerInterface {
 
     PageControlFragment pageControlFragment;
-//    PageViewerFragment pageViewerFragment;
     PagerFragment pagerFragment;
     BrowserControlFragment browserControlFragment;
     PageListFragment pageListFragment;
@@ -19,14 +18,12 @@ public class BrowserActivity extends AppCompatActivity implements PageControlFra
 
         if (savedInstanceState == null) {
             pageControlFragment = new PageControlFragment();
-//            pageViewerFragment = new PageViewerFragment();
             pagerFragment = new PagerFragment();
             browserControlFragment = new BrowserControlFragment();
             pageListFragment = PageListFragment.newInstance(new String[]{"page1", "page2", "page3"});
             getSupportFragmentManager()
                     .beginTransaction()
                     .add(R.id.page_control, pageControlFragment)
-//                    .add(R.id.page_display, pageViewerFragment)
                     .add(R.id.page_display, pagerFragment)
                     .add(R.id.browser_control, browserControlFragment)
                     .add(R.id.page_list, pageListFragment)
@@ -35,7 +32,6 @@ public class BrowserActivity extends AppCompatActivity implements PageControlFra
         }
         else {
             pageControlFragment = (PageControlFragment) getSupportFragmentManager().findFragmentById(R.id.page_control);
-//            pageViewerFragment = (PageViewerFragment) getSupportFragmentManager().findFragmentById(R.id.page_display);
             pagerFragment = (PagerFragment) getSupportFragmentManager().findFragmentById(R.id.page_display);
             browserControlFragment = (BrowserControlFragment) getSupportFragmentManager().findFragmentById(R.id.browser_control);
             pageListFragment = (PageListFragment) getSupportFragmentManager().findFragmentById(R.id.page_list);
@@ -44,36 +40,41 @@ public class BrowserActivity extends AppCompatActivity implements PageControlFra
 
     @Override
     public void onGoClick(String url) {
-        pagerFragment.go(url);
+        pagerFragment.getPage().go(url);
     }
 
     @Override
     public void onNextClick() {
-        pagerFragment.next();
+        pagerFragment.getPage().next();
+//        pageControlFragment.setText(pagerFragment.getUrl());
     }
 
     @Override
     public void onBackClick() {
-        pagerFragment.back();
-    }
-
-    @Override
-    public void onLinkClick(String url) {
-        pageControlFragment.setText(url);
+        pagerFragment.getPage().back();
+//        pageControlFragment.setText(pagerFragment.getUrl());
     }
 
     @Override
     public void onNewPageClick() {
         pagerFragment.addPage();
+        pageControlFragment.setText(null);
     }
 
     @Override
     public void onListClick(int position) {
         pagerFragment.setPage(position);
+        pageControlFragment.setText(pagerFragment.getPage().getUrl());
     }
 
     @Override
-    public void onSwipe() {
+    public void onPagerSwipe(String url) {
+        pageControlFragment.setText(url);
+    }
 
+    @Override
+    public void onPageLoad(PageViewerFragment pageViewerFragment, String url) {
+        if (pageViewerFragment == pagerFragment.getPage())
+            pageControlFragment.setText(url);
     }
 }

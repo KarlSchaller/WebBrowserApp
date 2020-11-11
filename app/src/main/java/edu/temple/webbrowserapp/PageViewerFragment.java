@@ -2,6 +2,8 @@ package edu.temple.webbrowserapp;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.Rect;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -11,7 +13,6 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
@@ -20,7 +21,7 @@ import android.webkit.WebViewClient;
  */
 public class PageViewerFragment extends Fragment {
 
-    LinkClickInterface parentActivity;
+    PageViewerInterface parentActivity;
     WebView webView;
 
     public PageViewerFragment() {
@@ -30,10 +31,10 @@ public class PageViewerFragment extends Fragment {
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-        if (context instanceof LinkClickInterface)
-            parentActivity = (LinkClickInterface) context;
+        if (context instanceof PageViewerInterface)
+            parentActivity = (PageViewerInterface) context;
         else
-            throw new RuntimeException("You must implement the LinkClickInterface interface to attach this fragment");
+            throw new RuntimeException("You must implement the PageViewerInterface interface to attach this fragment");
     }
 
     @Override
@@ -52,9 +53,9 @@ public class PageViewerFragment extends Fragment {
         webView.getSettings().setJavaScriptEnabled(true);
         webView.setWebViewClient(new WebViewClient() {
             @Override
-            public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
-                parentActivity.onLinkClick(request.getUrl().toString());
-                return super.shouldOverrideUrlLoading(view, request);
+            public void onPageStarted(WebView view, String url, Bitmap favicon) {
+                parentActivity.onPageLoad(PageViewerFragment.this, url);
+                super.onPageStarted(view, url, favicon);
             }
         });
 
@@ -86,7 +87,11 @@ public class PageViewerFragment extends Fragment {
         webView.goForward();
     }
 
-    interface LinkClickInterface {
-        void onLinkClick(String url);
+    public String getUrl() {
+        return webView.getUrl();
+    }
+
+    interface PageViewerInterface {
+        void onPageLoad(PageViewerFragment pageViewerFragment, String url);
     }
 }

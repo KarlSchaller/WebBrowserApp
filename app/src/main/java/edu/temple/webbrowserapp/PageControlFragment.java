@@ -17,7 +17,7 @@ import android.widget.EditText;
  */
 public class PageControlFragment extends Fragment {
 
-    PageControlClickInterface parentActivity;
+    PageControlInterface parentActivity;
     EditText editText;
 
     public PageControlFragment() {
@@ -27,10 +27,10 @@ public class PageControlFragment extends Fragment {
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-        if (context instanceof PageControlClickInterface)
-            parentActivity = (PageControlClickInterface) context;
+        if (context instanceof PageControlInterface)
+            parentActivity = (PageControlInterface) context;
         else
-            throw new RuntimeException("You must implement the PageControlClickInterface interface to attach this fragment");
+            throw new RuntimeException("You must implement the PageControlInterface interface to attach this fragment");
     }
 
     @Override
@@ -73,7 +73,7 @@ public class PageControlFragment extends Fragment {
         editText.setText(url);
     }
 
-    interface PageControlClickInterface {
+    interface PageControlInterface {
         void onGoClick(String url);
         void onNextClick();
         void onBackClick();

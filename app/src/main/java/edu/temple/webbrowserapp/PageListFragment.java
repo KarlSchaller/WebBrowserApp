@@ -1,7 +1,6 @@
 package edu.temple.webbrowserapp;
 
 import android.content.Context;
-import android.database.DataSetObserver;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -12,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -26,7 +24,7 @@ public class PageListFragment extends Fragment {
     private static final String ARG_PAGE_TITLES = "page-titles";
     private String[] mPageTitles;
 
-    PageListClickInterface parentActivity;
+    PageListInterface parentActivity;
 
     public PageListFragment() {
         // Required empty public constructor
@@ -50,10 +48,10 @@ public class PageListFragment extends Fragment {
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-        if (context instanceof PageListClickInterface)
-            parentActivity = (PageListClickInterface) context;
+        if (context instanceof PageListInterface)
+            parentActivity = (PageListInterface) context;
         else
-            throw new RuntimeException("You must implement the PageListClickInterface interface to attach this fragment");
+            throw new RuntimeException("You must implement the PageListInterface interface to attach this fragment");
     }
 
     @Override
@@ -116,7 +114,7 @@ public class PageListFragment extends Fragment {
         return view;
     }
 
-    interface PageListClickInterface {
+    interface PageListInterface {
         void onListClick(int position);
     }
 }
