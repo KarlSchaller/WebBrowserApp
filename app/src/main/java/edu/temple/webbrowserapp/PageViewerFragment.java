@@ -3,13 +3,7 @@ package edu.temple.webbrowserapp;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.Rect;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.view.LayoutInflater;
@@ -19,17 +13,11 @@ import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+
 public class PageViewerFragment extends Fragment implements Parcelable {
-
-    PageViewerInterface parentActivity;
-    WebView webView;
-
-    public PageViewerFragment() {
-        // Required empty public constructor
-    }
-
-    protected PageViewerFragment(Parcel in) {
-    }
 
     public static final Creator<PageViewerFragment> CREATOR = new Creator<PageViewerFragment>() {
         @Override
@@ -42,6 +30,18 @@ public class PageViewerFragment extends Fragment implements Parcelable {
             return new PageViewerFragment[size];
         }
     };
+    private WebView webView;
+    private PageViewerInterface parentActivity;
+
+    public PageViewerFragment() {
+        // Required empty public constructor
+    }
+
+    protected PageViewerFragment(Parcel in) {
+//        Bundle bundle = in.readBundle();
+//        webView = getLayoutInflater().inflate(R.layout.fragment_page_viewer, null).findViewById(R.id.webView);
+//        webView.restoreState(bundle);
+    }
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -68,15 +68,9 @@ public class PageViewerFragment extends Fragment implements Parcelable {
         webView.getSettings().setJavaScriptEnabled(true);
         webView.setWebViewClient(new WebViewClient() {
             @Override
-            public void onPageStarted(WebView view, String url, Bitmap favicon) {
-                parentActivity.onPageLoad(PageViewerFragment.this, url, view.getTitle());
-                super.onPageStarted(view, url, favicon);
-            }
-
-            @Override
-            public void onPageFinished(WebView view, String url) {
-                parentActivity.onPageLoad(PageViewerFragment.this, url, view.getTitle());
-                super.onPageFinished(view, url);
+            public void onLoadResource(WebView view, String url) {
+                super.onLoadResource(view, url);
+                parentActivity.onPageLoad(PageViewerFragment.this, view.getUrl(), view.getTitle());
             }
         });
 
@@ -123,7 +117,9 @@ public class PageViewerFragment extends Fragment implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-
+//        Bundle bundle = new Bundle();
+//        webView.saveState(bundle);
+//        dest.writeBundle(bundle);
     }
 
     interface PageViewerInterface {

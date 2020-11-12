@@ -2,6 +2,10 @@ package edu.temple.webbrowserapp;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Parcelable;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -10,18 +14,14 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class PagerFragment extends Fragment {
 
-    PagerInterface parentActivity;
-    ViewPager viewPager;
-    MyAdapter fragmentStatePagerAdapter;
-
+    private ViewPager viewPager;
+    private MyAdapter fragmentStatePagerAdapter;
+    private PagerInterface parentActivity;
 
     public PagerFragment() {
         // Required empty public constructor
@@ -76,7 +76,6 @@ public class PagerFragment extends Fragment {
         outState.putParcelable("pager", viewPager.onSaveInstanceState());
         outState.putParcelable("adapter", fragmentStatePagerAdapter.saveState());
         outState.putParcelableArrayList("list", fragmentStatePagerAdapter.pageViewerFragments);
-        System.out.println("========== FRAGMENT LIST ==============" + fragmentStatePagerAdapter.getCount());
     }
 
     @Override
@@ -85,24 +84,26 @@ public class PagerFragment extends Fragment {
         if (savedInstanceState != null) {
             viewPager.onRestoreInstanceState(savedInstanceState.getParcelable("pager"));
             fragmentStatePagerAdapter.restoreState(savedInstanceState.getParcelable("adapter"), null);
-            fragmentStatePagerAdapter.pageViewerFragments = savedInstanceState.getParcelableArrayList("list");
+//            fragmentStatePagerAdapter.pageViewerFragments = savedInstanceState.getParcelableArrayList("list");
+            fragmentStatePagerAdapter.pageViewerFragments.clear();
+            fragmentStatePagerAdapter.pageViewerFragments.addAll(Objects.requireNonNull(savedInstanceState.<PageViewerFragment>getParcelableArrayList("list")));
             fragmentStatePagerAdapter.notifyDataSetChanged();
+            viewPager.setAdapter(fragmentStatePagerAdapter);
         }
-        System.out.println("========== FRAGMENT LIST ==============" + fragmentStatePagerAdapter.getCount());
+    }
+
+    public void addPage() {
+        fragmentStatePagerAdapter.addPage();
+        viewPager.setCurrentItem(fragmentStatePagerAdapter.getCount() - 1);
+    }
+
+    public PageViewerFragment getPage() {
+        return fragmentStatePagerAdapter.pageViewerFragments.get(getIndex());
     }
 
     public void setPage(int index) {
         if (index < fragmentStatePagerAdapter.getCount())
             viewPager.setCurrentItem(index);
-    }
-
-    public void addPage() {
-        fragmentStatePagerAdapter.addPage();
-        viewPager.setCurrentItem(fragmentStatePagerAdapter.getCount()-1);
-    }
-
-    public PageViewerFragment getPage() {
-        return fragmentStatePagerAdapter.pageViewerFragments.get(getIndex());
     }
 
     public int getIndex() {

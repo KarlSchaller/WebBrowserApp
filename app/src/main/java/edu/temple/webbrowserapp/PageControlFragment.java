@@ -2,20 +2,20 @@ package edu.temple.webbrowserapp;
 
 import android.content.Context;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.URLUtil;
 import android.widget.EditText;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+
 public class PageControlFragment extends Fragment {
 
-    PageControlInterface parentActivity;
-    EditText editText;
+    private EditText editText;
+    private PageControlInterface parentActivity;
 
     public PageControlFragment() {
         // Required empty public constructor
@@ -73,7 +73,9 @@ public class PageControlFragment extends Fragment {
 
     interface PageControlInterface {
         void onGoClick(String url);
+
         void onNextClick();
+
         void onBackClick();
     }
 }

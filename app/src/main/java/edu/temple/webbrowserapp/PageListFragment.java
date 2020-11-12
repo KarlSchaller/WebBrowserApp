@@ -2,28 +2,25 @@ package edu.temple.webbrowserapp;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.BaseAdapter;
+import android.widget.ListView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.BaseAdapter;
-import android.widget.ListAdapter;
-import android.widget.ListView;
-import android.widget.TextView;
-
 import java.util.ArrayList;
 
 public class PageListFragment extends Fragment {
 
-    PageListInterface parentActivity;
-    ListView listView;
-    MyAdapter baseAdapter;
+    private ListView listView;
+    private MyAdapter baseAdapter;
+    private PageListInterface parentActivity;
 
     public PageListFragment() {
         // Required empty public constructor
@@ -65,7 +62,7 @@ public class PageListFragment extends Fragment {
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putParcelable("listView", listView.onSaveInstanceState());
+//        outState.putParcelable("listView", listView.onSaveInstanceState());
         outState.putStringArrayList("titleList", baseAdapter.pageTitles);
     }
 
@@ -73,7 +70,7 @@ public class PageListFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         if (savedInstanceState != null) {
-            listView.onRestoreInstanceState(savedInstanceState.getParcelable("listView"));
+//            listView.onRestoreInstanceState(savedInstanceState.getParcelable("listView"));
             baseAdapter.pageTitles = savedInstanceState.getStringArrayList("titleList");
         }
     }
@@ -124,8 +121,7 @@ public class PageListFragment extends Fragment {
                 textView.setTextSize(15);
                 textView.setPadding(5, 5, 5, 5);
                 textView.setHeight(100);
-            }
-            else
+            } else
                 textView = (TextView) convertView;
             textView.setText(pageTitles.get(position));
 

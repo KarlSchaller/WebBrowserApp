@@ -1,9 +1,9 @@
 package edu.temple.webbrowserapp;
 
+import android.os.Bundle;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-
-import android.os.Bundle;
 
 public class BrowserActivity extends AppCompatActivity implements PageControlFragment.PageControlInterface, BrowserControlFragment.BrowserControlInterface, PageListFragment.PageListInterface, PagerFragment.PagerInterface, PageViewerFragment.PageViewerInterface {
 
@@ -31,8 +31,7 @@ public class BrowserActivity extends AppCompatActivity implements PageControlFra
                     .addToBackStack(null)
                     .commit();
             setTitle("New Page");
-        }
-        else {
+        } else {
             pageControlFragment = (PageControlFragment) getSupportFragmentManager().findFragmentById(R.id.page_control);
             pagerFragment = (PagerFragment) getSupportFragmentManager().findFragmentById(R.id.page_display);
             browserControlFragment = (BrowserControlFragment) getSupportFragmentManager().findFragmentById(R.id.browser_control);
