@@ -4,7 +4,9 @@ import android.content.Context;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
@@ -17,9 +19,8 @@ import java.util.ArrayList;
 public class PagerFragment extends Fragment {
 
     PagerInterface parentActivity;
-    ArrayList<PageViewerFragment> pageViewerFragments;
     ViewPager viewPager;
-    FragmentStatePagerAdapter fragmentStatePagerAdapter;
+    MyAdapter fragmentStatePagerAdapter;
 
 
     public PagerFragment() {
@@ -38,8 +39,6 @@ public class PagerFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        pageViewerFragments = new ArrayList<>();
-        pageViewerFragments.add(new PageViewerFragment());
     }
 
     @Override
@@ -48,18 +47,7 @@ public class PagerFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_pager, container, false);
         viewPager = view.findViewById(R.id.viewPager);
-        fragmentStatePagerAdapter = new FragmentStatePagerAdapter(getChildFragmentManager(), FragmentStatePagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
-            @NonNull
-            @Override
-            public Fragment getItem(int position) {
-                return pageViewerFragments.get(position);
-            }
-
-            @Override
-            public int getCount() {
-                return pageViewerFragments.size();
-            }
-        };
+        fragmentStatePagerAdapter = new MyAdapter(getChildFragmentManager(), FragmentStatePagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
 
         viewPager.setAdapter(fragmentStatePagerAdapter);
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -82,19 +70,39 @@ public class PagerFragment extends Fragment {
         return view;
     }
 
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelable("pager", viewPager.onSaveInstanceState());
+        outState.putParcelable("adapter", fragmentStatePagerAdapter.saveState());
+        outState.putParcelableArrayList("list", fragmentStatePagerAdapter.pageViewerFragments);
+        System.out.println("========== FRAGMENT LIST ==============" + fragmentStatePagerAdapter.getCount());
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        if (savedInstanceState != null) {
+            viewPager.onRestoreInstanceState(savedInstanceState.getParcelable("pager"));
+            fragmentStatePagerAdapter.restoreState(savedInstanceState.getParcelable("adapter"), null);
+            fragmentStatePagerAdapter.pageViewerFragments = savedInstanceState.getParcelableArrayList("list");
+            fragmentStatePagerAdapter.notifyDataSetChanged();
+        }
+        System.out.println("========== FRAGMENT LIST ==============" + fragmentStatePagerAdapter.getCount());
+    }
+
     public void setPage(int index) {
-        if (index < pageViewerFragments.size())
+        if (index < fragmentStatePagerAdapter.getCount())
             viewPager.setCurrentItem(index);
     }
 
     public void addPage() {
-        pageViewerFragments.add(new PageViewerFragment());
-        fragmentStatePagerAdapter.notifyDataSetChanged();
-        viewPager.setCurrentItem(pageViewerFragments.size()-1);
+        fragmentStatePagerAdapter.addPage();
+        viewPager.setCurrentItem(fragmentStatePagerAdapter.getCount()-1);
     }
 
     public PageViewerFragment getPage() {
-        return pageViewerFragments.get(viewPager.getCurrentItem());
+        return fragmentStatePagerAdapter.pageViewerFragments.get(getIndex());
     }
 
     public int getIndex() {
@@ -103,5 +111,33 @@ public class PagerFragment extends Fragment {
 
     interface PagerInterface {
         void onPagerSelect(String url, String title);
+    }
+
+    private class MyAdapter extends FragmentStatePagerAdapter {
+
+        public ArrayList<PageViewerFragment> pageViewerFragments;
+
+        public MyAdapter(@NonNull FragmentManager fm, int behavior) {
+            super(fm, behavior);
+            pageViewerFragments = new ArrayList<>();
+            pageViewerFragments.add(new PageViewerFragment());
+            this.notifyDataSetChanged();
+        }
+
+        @NonNull
+        @Override
+        public Fragment getItem(int position) {
+            return pageViewerFragments.get(position);
+        }
+
+        @Override
+        public int getCount() {
+            return pageViewerFragments.size();
+        }
+
+        public void addPage() {
+            pageViewerFragments.add(new PageViewerFragment());
+            this.notifyDataSetChanged();
+        }
     }
 }

@@ -1,5 +1,6 @@
 package edu.temple.webbrowserapp;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
@@ -36,7 +37,14 @@ public class BrowserActivity extends AppCompatActivity implements PageControlFra
             pagerFragment = (PagerFragment) getSupportFragmentManager().findFragmentById(R.id.page_display);
             browserControlFragment = (BrowserControlFragment) getSupportFragmentManager().findFragmentById(R.id.browser_control);
             pageListFragment = (PageListFragment) getSupportFragmentManager().findFragmentById(R.id.page_list);
+            setTitle(savedInstanceState.getCharSequence("title"));
         }
+    }
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putCharSequence("title", getTitle());
     }
 
     @Override

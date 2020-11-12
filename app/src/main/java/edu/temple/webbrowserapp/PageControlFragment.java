@@ -59,6 +59,7 @@ public class PageControlFragment extends Fragment {
             public void onClick(View v) {
                 String url = editText.getText().toString();
                 url = URLUtil.guessUrl(url);
+//                editText.setText(url);
                 parentActivity.onGoClick(url);
             }
         });

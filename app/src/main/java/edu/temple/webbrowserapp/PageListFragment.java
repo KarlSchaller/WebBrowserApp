@@ -4,13 +4,16 @@ import android.content.Context;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -19,9 +22,8 @@ import java.util.ArrayList;
 public class PageListFragment extends Fragment {
 
     PageListInterface parentActivity;
-    ArrayList<String> mPageTitles;
     ListView listView;
-    BaseAdapter baseAdapter;
+    MyAdapter baseAdapter;
 
     public PageListFragment() {
         // Required empty public constructor
@@ -39,8 +41,6 @@ public class PageListFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mPageTitles = new ArrayList<>();
-        mPageTitles.add("New Page");
     }
 
     @Override
@@ -48,42 +48,9 @@ public class PageListFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         final View view = inflater.inflate(R.layout.fragment_page_list, container, false);
-
         listView = view.findViewById(R.id.listView);
-        baseAdapter = new BaseAdapter() {
-            Context context = view.getContext();
+        baseAdapter = new MyAdapter(view.getContext());
 
-            @Override
-            public int getCount() {
-                return mPageTitles.size();
-            }
-
-            @Override
-            public Object getItem(int position) {
-                return mPageTitles.get(position);
-            }
-
-            @Override
-            public long getItemId(int position) {
-                return position;
-            }
-
-            @Override
-            public View getView(int position, View convertView, ViewGroup parent) {
-                TextView textView;
-                if (convertView == null) {
-                    textView = new TextView(context);
-                    textView.setTextSize(15);
-                    textView.setPadding(5, 5, 5, 5);
-                    textView.setHeight(100);
-                }
-                else
-                    textView = (TextView) convertView;
-                textView.setText(mPageTitles.get(position));
-
-                return textView;
-            }
-        };
         listView.setAdapter(baseAdapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -95,17 +62,84 @@ public class PageListFragment extends Fragment {
         return view;
     }
 
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelable("listView", listView.onSaveInstanceState());
+        outState.putStringArrayList("titleList", baseAdapter.pageTitles);
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        if (savedInstanceState != null) {
+            listView.onRestoreInstanceState(savedInstanceState.getParcelable("listView"));
+            baseAdapter.pageTitles = savedInstanceState.getStringArrayList("titleList");
+        }
+    }
+
     public void addTitle(String title) {
-        mPageTitles.add(title);
-        baseAdapter.notifyDataSetChanged();
+        baseAdapter.addTitle(title);
     }
 
     public void setTitle(int index, String title) {
-        mPageTitles.set(index, title);
-        baseAdapter.notifyDataSetChanged();
+        baseAdapter.setTitle(index, title);
     }
 
     interface PageListInterface {
         void onListClick(int position);
+    }
+
+    private class MyAdapter extends BaseAdapter {
+
+        Context context;
+        ArrayList<String> pageTitles;
+
+        public MyAdapter(Context context) {
+            this.context = context;
+            pageTitles = new ArrayList<>();
+            pageTitles.add("New Page");
+        }
+
+        @Override
+        public int getCount() {
+            return pageTitles.size();
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return pageTitles.get(position);
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return position;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            TextView textView;
+            if (convertView == null) {
+                textView = new TextView(context);
+                textView.setTextSize(15);
+                textView.setPadding(5, 5, 5, 5);
+                textView.setHeight(100);
+            }
+            else
+                textView = (TextView) convertView;
+            textView.setText(pageTitles.get(position));
+
+            return textView;
+        }
+
+        public void addTitle(String title) {
+            pageTitles.add(title);
+            baseAdapter.notifyDataSetChanged();
+        }
+
+        public void setTitle(int index, String title) {
+            pageTitles.set(index, title);
+            this.notifyDataSetChanged();
+        }
     }
 }

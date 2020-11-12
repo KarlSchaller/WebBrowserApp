@@ -10,13 +10,16 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-public class PageViewerFragment extends Fragment {
+public class PageViewerFragment extends Fragment implements Parcelable {
 
     PageViewerInterface parentActivity;
     WebView webView;
@@ -24,6 +27,21 @@ public class PageViewerFragment extends Fragment {
     public PageViewerFragment() {
         // Required empty public constructor
     }
+
+    protected PageViewerFragment(Parcel in) {
+    }
+
+    public static final Creator<PageViewerFragment> CREATOR = new Creator<PageViewerFragment>() {
+        @Override
+        public PageViewerFragment createFromParcel(Parcel in) {
+            return new PageViewerFragment(in);
+        }
+
+        @Override
+        public PageViewerFragment[] newArray(int size) {
+            return new PageViewerFragment[size];
+        }
+    };
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -45,8 +63,8 @@ public class PageViewerFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_page_viewer, container, false);
-
         webView = view.findViewById(R.id.webView);
+
         webView.getSettings().setJavaScriptEnabled(true);
         webView.setWebViewClient(new WebViewClient() {
             @Override
@@ -96,6 +114,16 @@ public class PageViewerFragment extends Fragment {
 
     public String getTitle() {
         return webView.getTitle();
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+
     }
 
     interface PageViewerInterface {
