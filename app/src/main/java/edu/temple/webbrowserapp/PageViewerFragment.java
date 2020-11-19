@@ -31,6 +31,7 @@ public class PageViewerFragment extends Fragment implements Parcelable {
         }
     };
     private WebView webView;
+    private Bundle webViewBundle;
     private PageViewerInterface parentActivity;
 
     public PageViewerFragment() {
@@ -38,9 +39,7 @@ public class PageViewerFragment extends Fragment implements Parcelable {
     }
 
     protected PageViewerFragment(Parcel in) {
-//        Bundle bundle = in.readBundle();
-//        webView = getLayoutInflater().inflate(R.layout.fragment_page_viewer, null).findViewById(R.id.webView);
-//        webView.restoreState(bundle);
+        webViewBundle = in.readBundle();
     }
 
     @Override
@@ -86,6 +85,8 @@ public class PageViewerFragment extends Fragment implements Parcelable {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        if (webViewBundle != null)
+            webView.restoreState(webViewBundle);
         if (savedInstanceState != null)
             webView.restoreState(savedInstanceState);
     }
@@ -117,9 +118,9 @@ public class PageViewerFragment extends Fragment implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-//        Bundle bundle = new Bundle();
-//        webView.saveState(bundle);
-//        dest.writeBundle(bundle);
+        Bundle bundle = new Bundle();
+        webView.saveState(bundle);
+        dest.writeBundle(bundle);
     }
 
     interface PageViewerInterface {

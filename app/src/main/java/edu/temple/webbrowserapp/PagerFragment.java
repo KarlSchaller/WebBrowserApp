@@ -19,9 +19,10 @@ import java.util.Objects;
 
 public class PagerFragment extends Fragment {
 
-    private ViewPager viewPager;
+    ViewPager viewPager;
     private MyAdapter fragmentStatePagerAdapter;
     private PagerInterface parentActivity;
+    ArrayList<PageViewerFragment> pageViewerFragments;
 
     public PagerFragment() {
         // Required empty public constructor
@@ -75,7 +76,7 @@ public class PagerFragment extends Fragment {
         super.onSaveInstanceState(outState);
         outState.putParcelable("pager", viewPager.onSaveInstanceState());
         outState.putParcelable("adapter", fragmentStatePagerAdapter.saveState());
-        outState.putParcelableArrayList("list", fragmentStatePagerAdapter.pageViewerFragments);
+        outState.putParcelableArrayList("list", pageViewerFragments);
     }
 
     @Override
@@ -84,21 +85,22 @@ public class PagerFragment extends Fragment {
         if (savedInstanceState != null) {
             viewPager.onRestoreInstanceState(savedInstanceState.getParcelable("pager"));
             fragmentStatePagerAdapter.restoreState(savedInstanceState.getParcelable("adapter"), null);
-//            fragmentStatePagerAdapter.pageViewerFragments = savedInstanceState.getParcelableArrayList("list");
-            fragmentStatePagerAdapter.pageViewerFragments.clear();
-            fragmentStatePagerAdapter.pageViewerFragments.addAll(Objects.requireNonNull(savedInstanceState.<PageViewerFragment>getParcelableArrayList("list")));
+            pageViewerFragments = savedInstanceState.getParcelableArrayList("list");
+//            fragmentStatePagerAdapter.pageViewerFragments.clear();
+//            fragmentStatePagerAdapter.pageViewerFragments.addAll(Objects.requireNonNull(savedInstanceState.<PageViewerFragment>getParcelableArrayList("list")));
+//            fragmentStatePagerAdapter.pageViewerFragments.addAll(getChildFragmentManager().getFragments());
             fragmentStatePagerAdapter.notifyDataSetChanged();
-            viewPager.setAdapter(fragmentStatePagerAdapter);
         }
     }
 
     public void addPage() {
-        fragmentStatePagerAdapter.addPage();
+        pageViewerFragments.add(new PageViewerFragment());
+        fragmentStatePagerAdapter.notifyDataSetChanged();
         viewPager.setCurrentItem(fragmentStatePagerAdapter.getCount() - 1);
     }
 
     public PageViewerFragment getPage() {
-        return fragmentStatePagerAdapter.pageViewerFragments.get(getIndex());
+        return pageViewerFragments.get(getIndex());
     }
 
     public void setPage(int index) {
@@ -116,13 +118,11 @@ public class PagerFragment extends Fragment {
 
     private class MyAdapter extends FragmentStatePagerAdapter {
 
-        public ArrayList<PageViewerFragment> pageViewerFragments;
-
         public MyAdapter(@NonNull FragmentManager fm, int behavior) {
             super(fm, behavior);
             pageViewerFragments = new ArrayList<>();
             pageViewerFragments.add(new PageViewerFragment());
-            this.notifyDataSetChanged();
+            notifyDataSetChanged();
         }
 
         @NonNull
@@ -136,9 +136,12 @@ public class PagerFragment extends Fragment {
             return pageViewerFragments.size();
         }
 
-        public void addPage() {
-            pageViewerFragments.add(new PageViewerFragment());
-            this.notifyDataSetChanged();
+        @Override
+        public int getItemPosition(@NonNull Object object) {
+            if (pageViewerFragments.contains(object))
+                return pageViewerFragments.indexOf(object);
+            else
+                return POSITION_NONE;
         }
     }
 }

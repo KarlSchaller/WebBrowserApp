@@ -6,10 +6,26 @@
     tools:context=".BrowserControlFragment">
 
     <ImageButton
-        android:id="@+id/imageButton"
+        android:id="@+id/bookmarkButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:contentDescription="@string/bookmark"
+        android:src="@android:drawable/btn_star_big_off" />
+
+    <ImageButton
+        android:id="@+id/bookmarkListButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical|end"
+        android:contentDescription="@string/bookmark_list"
+        android:src="@android:drawable/ic_input_get" />
+
+    <ImageButton
+        android:id="@+id/newPageButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start|center_vertical"
         android:contentDescription="@string/new_page"
         android:src="@android:drawable/ic_input_add" />
 

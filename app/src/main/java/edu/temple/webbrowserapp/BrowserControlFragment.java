@@ -37,7 +37,7 @@ public class BrowserControlFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_browser_control, container, false);
 
-        view.findViewById(R.id.imageButton).setOnClickListener(new View.OnClickListener() {
+        view.findViewById(R.id.newPageButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 parentActivity.onNewPageClick();

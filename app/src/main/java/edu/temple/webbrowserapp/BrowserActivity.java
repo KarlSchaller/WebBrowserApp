@@ -48,16 +48,19 @@ public class BrowserActivity extends AppCompatActivity implements PageControlFra
 
     @Override
     public void onGoClick(String url) {
+        pagerFragment.viewPager.getAdapter().notifyDataSetChanged();
         pagerFragment.getPage().go(url);
     }
 
     @Override
     public void onNextClick() {
+        pagerFragment.viewPager.getAdapter().notifyDataSetChanged();
         pagerFragment.getPage().next();
     }
 
     @Override
     public void onBackClick() {
+        pagerFragment.viewPager.getAdapter().notifyDataSetChanged();
         pagerFragment.getPage().back();
     }
 
