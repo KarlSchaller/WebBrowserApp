@@ -43,11 +43,25 @@ public class BrowserControlFragment extends Fragment {
                 parentActivity.onNewPageClick();
             }
         });
+        view.findViewById(R.id.bookmarkButton).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                parentActivity.onBookmarkClick();
+            }
+        });
+        view.findViewById(R.id.bookmarkListButton).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                parentActivity.onBookmarkListClick();
+            }
+        });
 
         return view;
     }
 
     interface BrowserControlInterface {
         void onNewPageClick();
+        void onBookmarkClick();
+        void onBookmarkListClick();
     }
 }

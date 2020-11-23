@@ -48,19 +48,22 @@ public class BrowserActivity extends AppCompatActivity implements PageControlFra
 
     @Override
     public void onGoClick(String url) {
-        pagerFragment.viewPager.getAdapter().notifyDataSetChanged();
+        if (pagerFragment.viewPager.getAdapter() != null)
+            pagerFragment.viewPager.getAdapter().notifyDataSetChanged();
         pagerFragment.getPage().go(url);
     }
 
     @Override
     public void onNextClick() {
-        pagerFragment.viewPager.getAdapter().notifyDataSetChanged();
+        if (pagerFragment.viewPager.getAdapter() != null)
+            pagerFragment.viewPager.getAdapter().notifyDataSetChanged();
         pagerFragment.getPage().next();
     }
 
     @Override
     public void onBackClick() {
-        pagerFragment.viewPager.getAdapter().notifyDataSetChanged();
+        if (pagerFragment.viewPager.getAdapter() != null)
+            pagerFragment.viewPager.getAdapter().notifyDataSetChanged();
         pagerFragment.getPage().back();
     }
 
@@ -68,6 +71,16 @@ public class BrowserActivity extends AppCompatActivity implements PageControlFra
     public void onNewPageClick() {
         pageListFragment.addTitle("New Page");
         pagerFragment.addPage();
+    }
+
+    @Override
+    public void onBookmarkClick() {
+
+    }
+
+    @Override
+    public void onBookmarkListClick() {
+
     }
 
     @Override

@@ -17,7 +17,7 @@
         android:id="@+id/bookmarkListButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical|end"
+        android:layout_gravity="start|center_vertical"
         android:contentDescription="@string/bookmark_list"
         android:src="@android:drawable/ic_input_get" />
 
@@ -25,7 +25,7 @@
         android:id="@+id/newPageButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="start|center_vertical"
+        android:layout_gravity="center_vertical|end"
         android:contentDescription="@string/new_page"
         android:src="@android:drawable/ic_input_add" />
 
