@@ -1,5 +1,6 @@
 package edu.temple.webbrowserapp;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -80,7 +81,8 @@ public class BrowserActivity extends AppCompatActivity implements PageControlFra
 
     @Override
     public void onBookmarkListClick() {
-
+        Intent intent = new Intent(this, BookmarksActivity.class);
+        startActivity(intent);
     }
 
     @Override
