@@ -1,27 +1,25 @@
 package edu.temple.webbrowserapp;
 
-import androidx.appcompat.app.AppCompatActivity;
-
+import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.Intent;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
-import android.database.DataSetObserver;
 import android.os.Bundle;
-import android.util.ArraySet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.DialogFragment;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Objects;
-import java.util.Set;
 
 public class BookmarksActivity extends AppCompatActivity {
 
@@ -53,26 +51,15 @@ public class BookmarksActivity extends AppCompatActivity {
                 return position;
             }
 
+            @SuppressLint("InflateParams")
             @Override
             public View getView(final int position, View convertView, ViewGroup parent) {
-                Context context = getBaseContext();
-//                TextView textView;
-//                if (convertView == null) {
-//                    textView = new TextView(context);
-//                    textView.setTextSize(20);
-//                    textView.setPadding(8, 8, 8, 8);
-//                    textView.setHeight(150);
-//                }
-//                else
-//                    textView = (TextView) convertView;
-//                textView.setText(bookmarkTitles[position]);
-//
-//                return textView;
-
-                LayoutInflater layoutInflater = getLayoutInflater();
-                View linearLayout = layoutInflater.inflate(R.layout.bookmark_item, null, true);
-                TextView title = linearLayout.findViewById(R.id.content);
-                ImageButton deleteButton = linearLayout.findViewById(R.id.imageButton);
+                if (convertView == null) {
+                    LayoutInflater layoutInflater = getLayoutInflater();
+                    convertView = layoutInflater.inflate(R.layout.bookmark_item, null, true);
+                }
+                TextView title = convertView.findViewById(R.id.content);
+                ImageButton deleteButton = convertView.findViewById(R.id.imageButton);
 
                 title.setText(bookmarkTitles.get(position));
                 title.setOnClickListener(new View.OnClickListener() {
@@ -81,21 +68,38 @@ public class BookmarksActivity extends AppCompatActivity {
 
                     }
                 });
+
                 deleteButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        bookmarkTitles.remove(position);
-                        notifyDataSetChanged();
-                        HashSet<String> tempTitles = new HashSet<>(bookmarkTitles);
-                        editor.putStringSet("bookmarkTitles", tempTitles).apply();
+                        new AlertDialog.Builder(BookmarksActivity.this, R.style.Theme_AppCompat_Dialog_Alert)
+                                .setIcon(android.R.drawable.ic_dialog_alert)
+                                .setTitle("Delete Bookmark")
+                                .setMessage("Are you sure you want to delete this bookmark?")
+                                .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        bookmarkTitles.remove(position);
+                                        notifyDataSetChanged();
+                                        HashSet<String> tempTitles = new HashSet<>(bookmarkTitles);
+                                        editor.putStringSet("bookmarkTitles", tempTitles).apply();
+                                    }
+                                })
+                                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.cancel();
+                                    }
+                                })
+                                .show();
                     }
                 });
 
-                return linearLayout;
+                return convertView;
             }
         });
 
-        ListView deleteList = findViewById(R.id.deleteList);
+//        ListView deleteList = findViewById(R.id.deleteList);
 
         findViewById(R.id.closeButton).setOnClickListener(new View.OnClickListener() {
             @Override
