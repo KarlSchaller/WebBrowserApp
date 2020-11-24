@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:contentDescription="@string/bookmark"
-        android:src="@android:drawable/btn_star_big_off" />
+        android:src="@android:drawable/ic_menu_save" />
 
     <ImageButton
         android:id="@+id/bookmarkListButton"

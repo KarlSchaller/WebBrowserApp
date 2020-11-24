@@ -1,10 +1,15 @@
 package edu.temple.webbrowserapp;
 
+import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+
+import java.util.HashSet;
 
 public class BrowserActivity extends AppCompatActivity implements PageControlFragment.PageControlInterface, BrowserControlFragment.BrowserControlInterface, PageListFragment.PageListInterface, PagerFragment.PagerInterface, PageViewerFragment.PageViewerInterface {
 
@@ -76,11 +81,32 @@ public class BrowserActivity extends AppCompatActivity implements PageControlFra
 
     @Override
     public void onBookmarkClick() {
+        SharedPreferences sharedPreferences = getSharedPreferences("edu.temple.webbrowserapp.BOOKMARKS", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
 
+        int count = sharedPreferences.getInt("count", 0);
+        count++;
+        editor.putInt("count", count);
+
+        HashSet<String> bookmarkTitles = (HashSet<String>) sharedPreferences.getStringSet("bookmarkTitles", new HashSet<String>());
+        assert bookmarkTitles != null;
+        bookmarkTitles.add("test"+count);
+        editor.putStringSet("bookmarkTitles", bookmarkTitles);
+
+        HashSet<String> bookmarkLinks = (HashSet<String>) sharedPreferences.getStringSet("bookmarkLinks", new HashSet<String>());
+        assert bookmarkLinks != null;
+        bookmarkLinks.add("test"+count);
+        editor.putStringSet("bookmarkLinks", bookmarkLinks);
+
+        editor.apply();
     }
 
+    @SuppressLint("ApplySharedPref")
     @Override
     public void onBookmarkListClick() {
+        SharedPreferences sharedPreferences = getSharedPreferences("edu.temple.webbrowserapp.BOOKMARKS", Context.MODE_PRIVATE);
+        sharedPreferences.edit().putInt("count", sharedPreferences.getInt("count", 0)).commit();
+
         Intent intent = new Intent(this, BookmarksActivity.class);
         startActivity(intent);
     }
