@@ -44,6 +44,19 @@ public class BrowserActivity extends AppCompatActivity implements PageControlFra
             pageListFragment = (PageListFragment) getSupportFragmentManager().findFragmentById(R.id.page_list);
             setTitle(savedInstanceState.getCharSequence("title"));
         }
+
+
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+
+        String url = intent.getStringExtra("URL");
+        if (url != null) {
+            onNewPageClick();
+            onGoClick(url);
+        }
     }
 
     @Override
@@ -83,19 +96,16 @@ public class BrowserActivity extends AppCompatActivity implements PageControlFra
     public void onBookmarkClick() {
         SharedPreferences sharedPreferences = getSharedPreferences("edu.temple.webbrowserapp.BOOKMARKS", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
-
-        int count = sharedPreferences.getInt("count", 0);
-        count++;
-        editor.putInt("count", count);
+//        editor.clear().commit();
 
         HashSet<String> bookmarkTitles = (HashSet<String>) sharedPreferences.getStringSet("bookmarkTitles", new HashSet<String>());
         assert bookmarkTitles != null;
-        bookmarkTitles.add("test"+count);
+        bookmarkTitles.add(getTitle().toString());
         editor.putStringSet("bookmarkTitles", bookmarkTitles);
 
         HashSet<String> bookmarkLinks = (HashSet<String>) sharedPreferences.getStringSet("bookmarkLinks", new HashSet<String>());
         assert bookmarkLinks != null;
-        bookmarkLinks.add("test"+count);
+        bookmarkLinks.add(pagerFragment.getPage().getUrl());
         editor.putStringSet("bookmarkLinks", bookmarkLinks);
 
         editor.apply();
