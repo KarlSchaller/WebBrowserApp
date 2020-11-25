@@ -29,11 +29,11 @@ public class BookmarksActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bookmarks);
 
-        SharedPreferences sharedPreferences = getSharedPreferences("edu.temple.webbrowserapp.BOOKMARKS", Context.MODE_PRIVATE);
-        final SharedPreferences.Editor editor = sharedPreferences.edit();
-        final int count = sharedPreferences.getInt("count", 0);
+        final SharedPreferences sharedPreferences = getSharedPreferences("edu.temple.webbrowserapp.BOOKMARKS", Context.MODE_PRIVATE);
         final ArrayList<String> bookmarkTitles = new ArrayList<>(Objects.requireNonNull(sharedPreferences.getStringSet("bookmarkTitles", new HashSet<String>())));
+        System.out.println(bookmarkTitles.toString());
         final ArrayList<String> bookmarkLinks = new ArrayList<>(Objects.requireNonNull(sharedPreferences.getStringSet("bookmarkLinks", new HashSet<String>())));
+        System.out.println(bookmarkLinks.toString());
         ListView bookmarkList = findViewById(R.id.bookmarkList);
 
         bookmarkList.setAdapter(new BaseAdapter() {
@@ -85,7 +85,7 @@ public class BookmarksActivity extends AppCompatActivity {
                                         bookmarkTitles.remove(position);
                                         notifyDataSetChanged();
                                         HashSet<String> tempTitles = new HashSet<>(bookmarkTitles);
-                                        editor.putStringSet("bookmarkTitles", tempTitles).apply();
+                                        sharedPreferences.edit().putStringSet("bookmarkTitles", tempTitles).apply();
                                     }
                                 })
                                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -101,8 +101,6 @@ public class BookmarksActivity extends AppCompatActivity {
                 return convertView;
             }
         });
-
-//        ListView deleteList = findViewById(R.id.deleteList);
 
         findViewById(R.id.closeButton).setOnClickListener(new View.OnClickListener() {
             @Override

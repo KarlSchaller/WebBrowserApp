@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.HashSet;
+import java.util.Objects;
 
 public class BrowserActivity extends AppCompatActivity implements PageControlFragment.PageControlInterface, BrowserControlFragment.BrowserControlInterface, PageListFragment.PageListInterface, PagerFragment.PagerInterface, PageViewerFragment.PageViewerInterface {
 
@@ -94,29 +95,26 @@ public class BrowserActivity extends AppCompatActivity implements PageControlFra
 
     @Override
     public void onBookmarkClick() {
-        SharedPreferences sharedPreferences = getSharedPreferences("edu.temple.webbrowserapp.BOOKMARKS", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-//        editor.clear().commit();
+        if (pagerFragment.getPage().getUrl() != null) {
+            SharedPreferences sharedPreferences = getSharedPreferences("edu.temple.webbrowserapp.BOOKMARKS", Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+//            editor.clear().commit();
 
-        HashSet<String> bookmarkTitles = (HashSet<String>) sharedPreferences.getStringSet("bookmarkTitles", new HashSet<String>());
-        assert bookmarkTitles != null;
-        bookmarkTitles.add(getTitle().toString());
-        editor.putStringSet("bookmarkTitles", bookmarkTitles);
+            HashSet<String> bookmarkTitles = new HashSet<>(Objects.requireNonNull(sharedPreferences.getStringSet("bookmarkTitles", new HashSet<String>())));
+            bookmarkTitles.add(getTitle().toString());
+            editor.putStringSet("bookmarkTitles", bookmarkTitles);
 
-        HashSet<String> bookmarkLinks = (HashSet<String>) sharedPreferences.getStringSet("bookmarkLinks", new HashSet<String>());
-        assert bookmarkLinks != null;
-        bookmarkLinks.add(pagerFragment.getPage().getUrl());
-        editor.putStringSet("bookmarkLinks", bookmarkLinks);
+            HashSet<String> bookmarkLinks = new HashSet<>(Objects.requireNonNull(sharedPreferences.getStringSet("bookmarkLinks", new HashSet<String>())));
+            bookmarkLinks.add(pagerFragment.getPage().getUrl());
+            editor.putStringSet("bookmarkLinks", bookmarkLinks);
 
-        editor.apply();
+            editor.apply();
+        }
     }
 
     @SuppressLint("ApplySharedPref")
     @Override
     public void onBookmarkListClick() {
-        SharedPreferences sharedPreferences = getSharedPreferences("edu.temple.webbrowserapp.BOOKMARKS", Context.MODE_PRIVATE);
-        sharedPreferences.edit().putInt("count", sharedPreferences.getInt("count", 0)).commit();
-
         Intent intent = new Intent(this, BookmarksActivity.class);
         startActivity(intent);
     }
