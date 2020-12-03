@@ -9,6 +9,13 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Objects;
 
@@ -45,8 +52,6 @@ public class BrowserActivity extends AppCompatActivity implements PageControlFra
             pageListFragment = (PageListFragment) getSupportFragmentManager().findFragmentById(R.id.page_list);
             setTitle(savedInstanceState.getCharSequence("title"));
         }
-
-
     }
 
     @Override
@@ -96,19 +101,29 @@ public class BrowserActivity extends AppCompatActivity implements PageControlFra
     @Override
     public void onBookmarkClick() {
         if (pagerFragment.getPage().getUrl() != null) {
-            SharedPreferences sharedPreferences = getSharedPreferences("edu.temple.webbrowserapp.BOOKMARKS", Context.MODE_PRIVATE);
-            SharedPreferences.Editor editor = sharedPreferences.edit();
-//            editor.clear().commit();
-
-            HashSet<String> bookmarkTitles = new HashSet<>(Objects.requireNonNull(sharedPreferences.getStringSet("bookmarkTitles", new HashSet<String>())));
-            bookmarkTitles.add(getTitle().toString());
-            editor.putStringSet("bookmarkTitles", bookmarkTitles);
-
-            HashSet<String> bookmarkLinks = new HashSet<>(Objects.requireNonNull(sharedPreferences.getStringSet("bookmarkLinks", new HashSet<String>())));
-            bookmarkLinks.add(pagerFragment.getPage().getUrl());
-            editor.putStringSet("bookmarkLinks", bookmarkLinks);
-
-            editor.apply();
+            ArrayList<Bookmark> bookmarks = new ArrayList<>();
+            // GET
+            try {
+                FileInputStream fileInputStream = openFileInput("BOOKMARKS");
+                ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
+                bookmarks = (ArrayList<Bookmark>) objectInputStream.readObject();
+                objectInputStream.close();
+                fileInputStream.close();
+            } catch (IOException | ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+            // UPDATE
+            bookmarks.add(new Bookmark(getTitle().toString(), pagerFragment.getPage().getUrl()));
+            // STORE
+            try {
+                FileOutputStream fileOutputStream = openFileOutput("BOOKMARKS", Context.MODE_PRIVATE);
+                ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
+                objectOutputStream.writeObject(bookmarks);
+                objectOutputStream.close();
+                fileOutputStream.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 

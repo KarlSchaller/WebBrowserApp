@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,11 +15,14 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.DialogFragment;
 
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Objects;
 
 public class BookmarksActivity extends AppCompatActivity {
 
@@ -29,22 +31,29 @@ public class BookmarksActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bookmarks);
 
-        final SharedPreferences sharedPreferences = getSharedPreferences("edu.temple.webbrowserapp.BOOKMARKS", Context.MODE_PRIVATE);
-        final ArrayList<String> bookmarkTitles = new ArrayList<>(Objects.requireNonNull(sharedPreferences.getStringSet("bookmarkTitles", new HashSet<String>())));
-        System.out.println(bookmarkTitles.toString());
-        final ArrayList<String> bookmarkLinks = new ArrayList<>(Objects.requireNonNull(sharedPreferences.getStringSet("bookmarkLinks", new HashSet<String>())));
-        System.out.println(bookmarkLinks.toString());
         ListView bookmarkList = findViewById(R.id.bookmarkList);
 
+        ArrayList<Bookmark> bookmarks = new ArrayList<>();
+        try {
+            FileInputStream fileInputStream = openFileInput("BOOKMARKS");
+            ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
+            bookmarks = (ArrayList<Bookmark>) objectInputStream.readObject();
+            objectInputStream.close();
+            fileInputStream.close();
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        final ArrayList<Bookmark> finalBookmarkTitles = bookmarks;
         bookmarkList.setAdapter(new BaseAdapter() {
             @Override
             public int getCount() {
-                return bookmarkTitles.size();
+                return finalBookmarkTitles.size();
             }
 
             @Override
             public Object getItem(int position) {
-                return bookmarkTitles.get(position);
+                return finalBookmarkTitles.get(position);
             }
 
             @Override
@@ -62,12 +71,12 @@ public class BookmarksActivity extends AppCompatActivity {
                 TextView title = convertView.findViewById(R.id.content);
                 ImageButton deleteButton = convertView.findViewById(R.id.imageButton);
 
-                title.setText(bookmarkTitles.get(position));
+                title.setText(finalBookmarkTitles.get(position).title);
                 title.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         Intent intent = new Intent(BookmarksActivity.this, BrowserActivity.class);
-                        intent.putExtra("URL", bookmarkLinks.get(position));
+                        intent.putExtra("URL", finalBookmarkTitles.get(position).link);
                         startActivity(intent);
                     }
                 });
@@ -82,10 +91,17 @@ public class BookmarksActivity extends AppCompatActivity {
                                 .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
-                                        bookmarkTitles.remove(position);
+                                        finalBookmarkTitles.remove(position);
                                         notifyDataSetChanged();
-                                        HashSet<String> tempTitles = new HashSet<>(bookmarkTitles);
-                                        sharedPreferences.edit().putStringSet("bookmarkTitles", tempTitles).apply();
+                                        try {
+                                            FileOutputStream fileOutputStream = openFileOutput("BOOKMARKS", Context.MODE_PRIVATE);
+                                            ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
+                                            objectOutputStream.writeObject(finalBookmarkTitles);
+                                            objectOutputStream.close();
+                                            fileOutputStream.close();
+                                        } catch (IOException e) {
+                                            e.printStackTrace();
+                                        }
                                     }
                                 })
                                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
