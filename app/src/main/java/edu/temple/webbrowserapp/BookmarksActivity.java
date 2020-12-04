@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -75,9 +76,7 @@ public class BookmarksActivity extends AppCompatActivity {
                 title.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent intent = new Intent(BookmarksActivity.this, BrowserActivity.class);
-                        intent.putExtra("URL", finalBookmarkTitles.get(position).link);
-                        startActivity(intent);
+                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(finalBookmarkTitles.get(position).link), BookmarksActivity.this, BrowserActivity.class));
                     }
                 });
 

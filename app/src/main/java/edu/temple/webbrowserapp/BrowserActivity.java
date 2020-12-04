@@ -58,7 +58,7 @@ public class BrowserActivity extends AppCompatActivity implements PageControlFra
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
 
-        String url = intent.getStringExtra("URL");
+        String url = intent.getDataString();
         if (url != null) {
             onNewPageClick();
             onGoClick(url);
