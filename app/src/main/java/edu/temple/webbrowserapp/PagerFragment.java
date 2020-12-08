@@ -68,6 +68,12 @@ public class PagerFragment extends Fragment {
             }
         });
 
+        String url = getActivity().getIntent().getDataString();
+        if (url != null) {
+            addPage(url);
+            viewPager.getAdapter().notifyDataSetChanged();
+        }
+
         return view;
     }
 
@@ -95,6 +101,12 @@ public class PagerFragment extends Fragment {
 
     public void addPage() {
         pageViewerFragments.add(new PageViewerFragment());
+        fragmentStatePagerAdapter.notifyDataSetChanged();
+        viewPager.setCurrentItem(fragmentStatePagerAdapter.getCount() - 1);
+    }
+
+    public void addPage(String url) {
+        pageViewerFragments.add(PageViewerFragment.createFragment(url));
         fragmentStatePagerAdapter.notifyDataSetChanged();
         viewPager.setCurrentItem(fragmentStatePagerAdapter.getCount() - 1);
     }

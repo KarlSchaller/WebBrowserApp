@@ -10,4 +10,5 @@
     <string name="bookmark">bookmark</string>
     <string name="close">Close</string>
     <string name="delete">delete</string>
+    <string name="share">Share</string>
 </resources>

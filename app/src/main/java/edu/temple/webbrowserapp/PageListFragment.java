@@ -56,6 +56,10 @@ public class PageListFragment extends Fragment {
             }
         });
 
+        String url = getActivity().getIntent().getDataString();
+        if (url != null)
+            addTitle("New Page");
+
         return view;
     }
 

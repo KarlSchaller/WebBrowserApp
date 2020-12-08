@@ -7,6 +7,8 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -14,8 +16,10 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -31,6 +35,9 @@ public class BookmarksActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bookmarks);
+        setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
+
+        setTitle("Bookmarks");
 
         ListView bookmarkList = findViewById(R.id.bookmarkList);
 
@@ -123,5 +130,26 @@ public class BookmarksActivity extends AppCompatActivity {
                 finish();
             }
         });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.action_bar_items, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.shareButton:
+                Intent intent = new Intent(Intent.ACTION_SEND);
+                intent.setType("text/plain");
+                intent.putExtra(Intent.EXTRA_TEXT, getIntent().getStringExtra("URL"));
+                intent.putExtra(Intent.EXTRA_SUBJECT, getIntent().getStringExtra("TITLE"));
+                startActivity(Intent.createChooser(intent, "Share via"));
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 }

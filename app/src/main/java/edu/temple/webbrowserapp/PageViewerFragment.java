@@ -33,9 +33,16 @@ public class PageViewerFragment extends Fragment implements Parcelable {
     private WebView webView;
     private Bundle webViewBundle;
     private PageViewerInterface parentActivity;
+    private String url;
 
     public PageViewerFragment() {
         // Required empty public constructor
+    }
+
+    public static PageViewerFragment createFragment(String url) {
+        PageViewerFragment pageViewerFragment = new PageViewerFragment();
+        pageViewerFragment.url = url;
+        return pageViewerFragment;
     }
 
     protected PageViewerFragment(Parcel in) {
@@ -73,6 +80,9 @@ public class PageViewerFragment extends Fragment implements Parcelable {
             }
         });
 
+        if (url != null)
+            go(url);
+
         return view;
     }
 
@@ -104,10 +114,14 @@ public class PageViewerFragment extends Fragment implements Parcelable {
     }
 
     public String getUrl() {
+        if (webView == null)
+            return null;
         return webView.getUrl();
     }
 
     public String getTitle() {
+        if (webView == null)
+            return null;
         return webView.getTitle();
     }
 

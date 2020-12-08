@@ -3,21 +3,23 @@ package edu.temple.webbrowserapp;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.AttributeSet;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Objects;
 
 public class BrowserActivity extends AppCompatActivity implements PageControlFragment.PageControlInterface, BrowserControlFragment.BrowserControlInterface, PageListFragment.PageListInterface, PagerFragment.PagerInterface, PageViewerFragment.PageViewerInterface {
 
@@ -30,6 +32,7 @@ public class BrowserActivity extends AppCompatActivity implements PageControlFra
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
 
         if (savedInstanceState == null) {
             pageControlFragment = new PageControlFragment();
@@ -66,10 +69,41 @@ public class BrowserActivity extends AppCompatActivity implements PageControlFra
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.action_bar_items, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.shareButton:
+                Intent intent = new Intent(Intent.ACTION_SEND);
+                intent.setType("text/plain");
+                intent.putExtra(Intent.EXTRA_TEXT, pagerFragment.getPage().getUrl());
+                intent.putExtra(Intent.EXTRA_SUBJECT, pagerFragment.getPage().getTitle());
+                startActivity(Intent.createChooser(intent, "Share via"));
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putCharSequence("title", getTitle());
     }
+
+//    @Override
+//    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
+//        super.onRestoreInstanceState(savedInstanceState);
+//        pageControlFragment = (PageControlFragment) getSupportFragmentManager().findFragmentById(R.id.page_control);
+//        pagerFragment = (PagerFragment) getSupportFragmentManager().findFragmentById(R.id.page_display);
+//        browserControlFragment = (BrowserControlFragment) getSupportFragmentManager().findFragmentById(R.id.browser_control);
+//        pageListFragment = (PageListFragment) getSupportFragmentManager().findFragmentById(R.id.page_list);
+//        setTitle(savedInstanceState.getCharSequence("title"));
+//    }
 
     @Override
     public void onGoClick(String url) {
@@ -131,6 +165,8 @@ public class BrowserActivity extends AppCompatActivity implements PageControlFra
     @Override
     public void onBookmarkListClick() {
         Intent intent = new Intent(this, BookmarksActivity.class);
+        intent.putExtra("URL", pagerFragment.getPage().getUrl());
+        intent.putExtra("TITLE", pagerFragment.getPage().getTitle());
         startActivity(intent);
     }
 
